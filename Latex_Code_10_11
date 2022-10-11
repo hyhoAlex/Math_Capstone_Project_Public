@@ -254,7 +254,7 @@
     \begin{align*}
         x_{i} &= x_{i-1} + \int_{(i-1)h}^{ih} \! \dot{x}(t) \, \mathrm{d}t \\
     \end{align*}
-\textnormal{we can regard $\int_{(i-1)h}^{ih} \! \dot{x}(t) \, \mathrm{d}t$ as distance = velocity]}
+\textnormal{[we can regard $\int_{(i-1)h}^{ih} \! \dot{x}(t) \, \mathrm{d}t$ as distance = velocity $\times$ time]}
      \begin{align*}   
         &= x_{i-1} + \int_{(i-1)h}^{ih} \! (-\frac{k}{r}x + \frac{\xi (t)}{r}) \, \mathrm{d}t \\
         &= x_{i-1} -\frac{k}{r} \int_{(i-1)h}^{ih} \! x(t) \, \mathrm{d}t + \frac{1}{r} \int_{(i-1)h}^{ih} \! \xi (t) \, \mathrm{d}t \\
