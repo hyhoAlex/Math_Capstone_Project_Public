@@ -1,0 +1,180 @@
+\documentclass[12pt,english]{article}
+
+\usepackage[a4paper,
+            bindingoffset=0.2in,
+            left=1in,
+            right=1in,
+            top=1in,
+            bottom=1in,
+            footskip=.25in]{geometry}
+\usepackage{blindtext}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{outlines}
+\usepackage{amsmath,,amssymb, array}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{float}
+\usepackage{lipsum}
+\usepackage{enumitem}
+\usepackage{pifont}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{svg}
+\usepackage{verbatim}
+\captionsetup{justification=centering}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+\title{Math Capstone Project Appendix}
+\author{Ho Yi Alexis HO}
+\date{September 2022}
+
+\begin{document}
+\newcommand{\Int}{\int\limits}
+
+\maketitle
+\section*{A Forward Euler Method}
+\begin{flushleft}
+We substituted new notations $p = \dot{x}$ (1.2) and $\dot{p} = \ddot{x}$ (1.3) into (1.1) and obtained $\dot{p} = (-\gamma p-Kx)/m$ (1.4) after some simple algebraic operations.
+By applying the Taylor expansion, we have,
+    \begin{align*}
+        x(h) &= x(0) + \dot{x}(0)h \\
+            &= x(0) + p(0)h \tag*{\small(\textit{by 1.2)}} \\
+            & = x_{0} + p_{0}h \tag*{\small(\textit{by IVP condition)}} \\
+        p(h) &= p(0) + \dot{p}(0)h \\
+            &= p(0) + ((-\gamma p(0)-Kx(0))/m)h \tag*{\small(\textit{by 1.4)}} \\
+            & = p_{0} + h(-\gamma p_{0}-Kx_{0})/m \tag*{\small(\textit{by IVP condition)}} \\
+        x(2h) &= x(h) + \dot{x}(h)h \\
+            &= x(h) + p(h)h \tag*{\small(\textit{by 1.2)}}\\ 
+            &= x(h) + h(p_{0} + h(-\gamma p_{0}-Kx_{0})/m)
+            \tag*{\small(\textit{by substitution of $p(h)$})}
+    \end{align*}
+    From the above procedure, we moved from time 0 to time t. WLOG, by setting $t_{n+1} = t_{n} + h$, we can further generalised such a procedure to,
+    \begin{align*}
+        x(t_{n}) &= x(t_{n-1}) + \dot{x}(t_{n-1})h \\
+            &= x(t_{n-1}) + p(t_{n-1})h
+    \end{align*}
+[\textit{Notice that $x(t_{n-1})$ and $p(t_{n-1})$ were already obtained from the previous iteration.}]
+    \begin{align*}
+        p(t_{n}) &= p(t_{n-1}) + \dot{p}(t_{n-1})h \\
+            &= p(t_{n-1}) + h(-\gamma p(t_{n-1})-Kx(t_{n-1}))/m \\
+        x(t_{n+1}) &= x(t_{n}) + \dot{x}(t_{n})h \\
+            &= x(t_{n}) + p(t_{n})h
+    \end{align*}
+\end{flushleft}
+
+\section*{A Analytical Solutions of ODE}
+\subsection*{A.1 Solve the ODE}
+    \begin{flushleft}
+     Moving terms in (1.1) gives us $m\ddot{x} + \gamma\dot{x} + Kx = 0$ (1.5). Since $m$, $\gamma$ and $K$ are all constants, we recognize (1.5) as a homogeneous, linear, second-order differential equation. The characteristic equation of (1.5), hence, is $mw^{2} + rw + K = 0$. Solving this quadratic equation gives $w = (- \gamma {\displaystyle \pm} \sqrt{\gamma ^2-4mK})/2m$ so we will further separate our discussion into three cases. \newline
+     \newline
+    \underline{Case 1:} When $r^{2} - 4mK > 0$, then the roots of the characteristic equation, $w_{1}$ and $w_{2}$ are real and distinct. The general solution of (1.5) is, hence, $x(t) = c_{1}e^{w_{1}t} + c_{2}e^{w_{2}t}$ (1.6). Given $x(0) = x_{0}$, we obtained $c_{1} + c_{2} = x_{0}$ (1.7). Given $\dot{x}(0) = p(0) = p_{0}$, we first took first derivative w.r.t $t$ on both sides of (1.6) and attained $\dot{x} = c_{1}w_{1}e^{w_{1}t} + c_{2}w_{2}e^{w_{2}t}$. Further evaluating $\dot{x}$ at point 0 gives, $\dot{x}(0) = c_{1}w_{1} + c_{2}w_{2} = p_{0}$ (1.8). By equating (1.7) and (1.8) and using Cramer's rule, we obtained, \newline
+    \[
+        \left\{\begin{aligned} 
+          &c_{1} + c_{2} = x_{0} \\ 
+          &c_{1}w_{1} + c_{2}w_{2} = p_{0}
+        \end{aligned}\right. \Rightarrow
+        \left\{\begin{aligned}
+         c_{1} &= (x_{0}w_{2}-p_{0})/(w_{2}-w_{1})\\ 
+         c_{2} &= (p_{0} - w_{1}x_{0})/(w_{2}-w_{1})
+        \end{aligned}\right.
+    \]
+    The general solution of (1.5) under IVP condition is, therefore, $x(t) = (x_{0}w_{2}-p_{0})/(w_{2}-w_{1})e^{w_{1}t} + (p_{0} - w_{1}x_{0})/(w_{2}-w_{1})e^{w_{2}t}$, where $w_{1,2} =(- \gamma {\displaystyle \pm} \sqrt{\gamma ^2-4mK})/(2m)$.\newline
+
+    \underline{Case 2:} When $\gamma ^{2} - 4mK = 0$, then the roots of the characteristic equation, $w_{1}$, $w_{2}$ are real and but repeated (i.e.$w_{1}$ = $w_{2} = w$). The general solution of (1.5) is, hence, $x(t) = c_{1}e^{wt} + c_{2}te^{wt}$ (1.9). Given $x(0) = x_{0}$, we obtained $c_{1} = x_{0}$ (2.0). Given $\dot{x}(0) = p(0) = p_{0}$, we first took first derivative w.r.t $t$ on both sides of (1.9) and attained $\dot{x} = c_{1}we^{wt} + c_{2}(wte^{wt}+e^{wt})$. Further evaluating $\dot{x}$ at point 0 gives, $\dot{x}(0) = c_{1}w + c_{2} = p_{0}$ (2.1). By equating (2.0) and (2.1), we obtained $c_{2} = p_{0} - x_{0}w$. The general solution of (1.9), hence, is $x(t) = x_{0}e^{wt} + (p_{0} - x_{0}w)te^{wt}$, where $w = (- \gamma + \sqrt{\gamma ^2-4mK})/(2m)$. \newline
+    
+    \underline{Case 3:} When $\gamma ^{2} - 4mK < 0$, then the roots of the characteristic equation, $w_{1}$ and $w_{2}$ are complex and it is in the form of $w_{1,2} = \lambda {\displaystyle \pm} \mu i$. The general solution of (1.5) is, hence, $x(t) = c_{1}e^{\lambda t}cos(\mu t) + c_{2}e^{\lambda t}sin(\mu t) (2.2)$.
+    Given $x(0) = x_{0}$, we obtained $c_{1} = x_{0}$ (2.3). Given $\dot{x}(0) = p(0) = p_{0}$, we first took first derivative w.r.t $t$ on both sides of (2.2) and attained $\dot{x} = c_{1} e^{\lambda t}[- \mu \sin (\mu t) + \lambda \cos ( \mu t)] + c_{2} e^{\lambda t}[\mu \cos (\mu t) + \lambda \sin (\mu t)]$. Further evaluating $\dot{x}$ at point 0 gives, $\dot{x}(0) = c_{1}\lambda + c_{2}\mu = p_{0}$ (2.4). By equating (2.3) and (2.4), we obtained $c_{2} = (p_{0} - x_{0}\lambda)/\mu$. The general solution of (1.9), hence, is $x(t) = x_{0}e^{\lambda t}cos(\mu t) + (p_{0} - x_{0}\lambda)e^{\lambda t}sin(\mu t)/\mu$, where $w_{1,2} =(- \gamma {\displaystyle \pm} \sqrt{\gamma ^2-4mK})/(2m) = \lambda {\displaystyle \pm} \mu i $. \newline      
+    \end{flushleft}
+    
+\subsection*{A.2 Physical Behavior of the ODE Solutions}
+\begin{flushleft}
+    \underline{Case \small1.1} We consider the system $m \ddot{x} = -\gamma \dot{x}$ \small(1.1.1). In such a system, the acceleration $\ddot{x}$ is negatively correlated with the velocity $\dot{x}$ with a coefficient, $-\gamma/ m$. The opposite sign between $\ddot{x}$ and $\dot{x}$ indicates the deceleration. Imagine a particle moving on a frictional surface. The inertia, which is proportional to the self-mass, drives the particle moving forward while the frictional force drags the particle backward and attempts to stop the particle's forward motion. That explains why $m$ appears on the fraction's denominator to compensate for the opposite effect brought by $\gamma$. From the above force analysis, we recognize that frictional force is the only force applied to this system, as inertia is not a force. Meanwhile, we can also draw the same conclusion by comparing the classical Newton's second law, $F=ma$, with the equation \small(1.1.1), which gives $F = -\gamma \dot{x}$. By observing the coefficient $-\gamma$, we again concluded that the frictional force is the only contributing force in our system. We, thus, call such a system overdamped to reflect the high energy loss caused by the frictional force.
+    \newline \\
+    We let $p = \dot{x}$ to reduce the ODE's higher orders in equation \small(1.1.1). The equation becomes 
+    \begin{align*}
+        \dot{p} = - \frac{\gamma}{m} p
+    \end{align*}
+    with the solution
+    \begin{align*}
+        p(t) = p(0)e^{-\frac{\gamma}{m}t}
+    \end{align*}
+    The solution is in the basic form of exponential decay, with exponential decay constant $\lambda = - \gamma/m$. Recall that the characteristic decay time $\tau_{p} = 1/\lambda = m/\gamma$. When we let $t = \tau_{p}$, $p(\tau_{p}) = p(0)e^{-1}$. If we treat $p(0)$ as the initial population, then after the time, $\tau_{p}$, the initial population is roughly reduced to its original's -0.367 times. The initial population almost goes to extinction; that is where the name of characteristic decay time comes from. In our oscillator's context, the initial population becomes the velocity $p$. $\tau_{p}$, hence, is the stop time. The particle stops after the time scale $\tau_{p}$ since no velocity remains. To understand how fast the velocity will be all used up by the particle, we need a benchmark for comparison. Therefore, we need to consider another system illustrated in Case 1.3.
+    \newline \\
+    
+    \underline{Case \small1.3} In Case 1.1, we considered a world with the frictional force alone and obtained the system's stop time $\tau_{p}$. To realize which benchmark to compare, we must be aware that we were previously in a system filled with obstacles that strive to stop the particle's motions through frictional force. The mirrored extreme case, hence, is an energetic environment replete with the driving force. This time, we only want the presence of $F = -Kx$, where $K$ is the spring constant; we let the spring be the force generator. Enlightened of Newton's second law, we consider $m \ddot{x} = - Kx$ \small(1.3.1). Since there is no damping force, e.g., friction but only the spring's elastic force. We can imagine that the system continues indefinitely. Such a phenomenon is not a coincidence but a necessary result of the simple harmonic motion, whose standard equation form is described by \small(1.3.1).
+    \newline\\
+    \end{flushleft}
+
+\section*{C: Noise's Covariance}
+   \begin{align*}
+        \langle \zeta_{i} \zeta_{j} \rangle
+        &= \langle (\int_{(i-1)h}^{ih} \! \xi (t) \,              \mathrm{d}t)
+            (\int_{(i-1)h}^{ih} \! \xi (t') \, 
+            \mathrm{d}t') \rangle \\
+        &= \Int_{(i-1)h}^{ih} \Int_{(j-1)h}^{jh}
+        \langle \xi(t)\xi(t') \rangle \,dt\,dt'
+        \tag*{\small(\textit{by linearity of covariance})}\\
+        &= \Int_{(i-1)h}^{ih} \Int_{(j-1)h}^{jh}
+            \Gamma \delta (t-t') \,dt\,dt'\\
+        &= \Gamma \Int_{(i-1)h}^{ih} \Int_{(j-1)h}^{jh}
+             \delta (t-t') \,dt\,dt' \\
+        &= \left\{
+        \begin{aligned}
+         0 \textnormal{ if } i \neq j \\
+         \Gamma h \textnormal{ if } i = j
+        \end{aligned} \right.
+    \end{align*}
+
+\section*{D: Trajectory Driven by the Noise}
+    
+\begin{flushleft}
+    Since we can regard $\int_{(i-1)h}^{ih} \! \dot{x}(t) \, \mathrm{d}t$ as $\Delta$distance = velocity $\times$ $\Delta$time, we write,
+    \begin{align*}
+        x_{i} &= x_{i-1} + \int_{(i-1)h}^{ih} \! \dot{x}(t) \, \mathrm{d}t \\
+        &= x_{i-1} + \int_{(i-1)h}^{ih} \! (-\frac{k}{r}x + \frac{\xi (t)}{r}) \, \mathrm{d}t 
+        \tag*{\small(\textit{by substitutions of (3.1))}}
+        \\
+        &= x_{i-1} -\frac{k}{r} \int_{(i-1)h}^{ih} \! x(t) \, \mathrm{d}t + \frac{1}{r} \int_{(i-1)h}^{ih} \! \xi (t) \, \mathrm{d}t \tag*{\small(3.3)}
+    \end{align*}
+    For the second term in \small(3.3), we can again solve it by applying Forward Euler Method. $x(t)$ is a solution of the ODE. It is, hence, differentiable. Otherwise, it will be meaningless to discuss the ODE when $\dot{x}$ does not exist and do so other higher order derivative terms, e.g., $\ddot{x}$ as a consequence. $x(t)$'s differentiability implies $x(t)$ is a continuous function, which satisfies the condition of using the first fundamental theorem of calculus. We let $F = \int_{0}^{x} \! x(t) \, \mathrm{d}t$. The theorem states that $F$, an indefinite integral is also an antiderivative of $x(t)$, i.e. $F'(t) = x(t)$. Along with Newton–Leibniz axiom, we use Talyor expansion to further simplify the integral to, 
+    \begin{align*}
+        \int_{(i-1)h}^{ih} \! x(t) \, \mathrm{d}t = F(ih) - F((i-1)h) = F'((i-1))h = x(i-1)h
+    \end{align*}
+    To study the third term in \small(3.3), 
+    
+   finally it gives the core equation we used to perform the iteration task in Python,
+    \begin{align*}
+        x_{i} & = x_{i-1} -\frac{K}{\gamma}x_{i-1}h + \frac{\zeta_{i}}{r}
+    \end{align*}
+    \end{flushleft} 
+\subsection*{B: Monte Carlo Simulation}
+    \lstset{language=Python}
+    \lstset{frame=lines}
+    \lstset{title={Monte Carlo Simulation  to Find the Trajectory of $X(t)$}}
+    \lstset{label={lst:code_direct}}
+    \lstset{basicstyle=\footnotesize}
+    \begin{lstlisting}
+kBT = 0.5
+K = 5 # spring constant
+E = lambda x: (K*x**2/2) # elastic potential energy
+x = 0 # initial position
+chain = [x] # Markov chain
+for i in range(1, 100000):
+    x_c = x + random.uniform(-1, 1) # trial step size
+    z = random.uniform(0, 1)
+    prob = math.exp(-(E(x_c)-E(x))/kBT)
+    if E(x_c) < E(x):
+        x = x_c
+    elif z <= prob:
+        x = x_c
+    else:
+        x = x
+    chain.append(x)
+    \end{lstlisting}
+
+\end{document}
