@@ -1,0 +1,163 @@
+\documentclass[12pt,english]{article}
+
+\usepackage[a4paper,
+            bindingoffset=0.2in,
+            left=1in,
+            right=1in,
+            top=1in,
+            bottom=1in,
+            footskip=.25in]{geometry}
+\usepackage{blindtext}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{outlines}
+\usepackage{amsmath,,amssymb, array}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{float}
+\usepackage{lipsum}
+\usepackage{enumitem}
+\usepackage{pifont}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{svg}
+\usepackage{verbatim}
+\usepackage{blindtext}
+\usepackage{hyperref}
+
+\captionsetup{justification=centering}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+\title{Math Capstone Project}
+\author{Ho Yi Alexis HO}
+\date{}
+\begin{document}
+\newcommand{\Int}{\int\limits}
+
+\maketitle
+
+\section*{I: A Universe without the White Noise}
+    \begin{flushleft}
+    \textbf{Three Cases of the Harmonic Oscillator}\\
+    Given $m\ddot{x} = -\gamma\dot{x}-Kx$ (1.1) , we can set $p = \dot{x}$ (1.2), which further gives $\dot{p} = \ddot{x}$ (1.3).
+    After specifying the initial position of the Brownie motion particle, $x(0) = x_{0}$ and its initial velocity, $p(0) = p_{0}$, we are interested to approximate the positions of the particle at different values of $t$. We adapted the Forward Euler Method and obtained the iterative equation,
+    \begin{align*}
+        x(t_{n+1}) = x(t_{n}) + p(t_{n})h, 
+    \end{align*}
+    whose derivation details are presented in Appendix A. Due to the nature of the Forward Euler Method, we have already calculated the $x(t_{n})$ and $p(t_{n})$ from the previous steps. That makes our idea of approximating $x(t)$ for all $t$ using Python's iterative function practicable. To set up a valid criterion to verify our numerical approximation, we will also derive the analytical solutions for (1.1). The derivation details and the physical interpretations of the ODE solutions can be found in Appendix A.1 and A.2.
+    \end{flushleft}
+
+\section*{II: A Universe with the White Noise}    
+    \begin{flushleft}
+    After setting up the basic framework, we now introduce the noise to the current system for a more realistic simulation. The governing equation, hence, turns to be $\gamma \dot{x} = - Kx + \xi$ (3.1), where $\xi$ represents the noise. In Physics, we regard these noises as constant kicks. These kicks guarantee the particle will never stop at a fixed point, even at its equilibrium state. We assume the noise in our model has zero mean, i.e., $\langle \xi \rangle = 0$ , considering noise's mean reversion property in many real-life cases. We expect noises not to be a self-perpetuating force in favor of any specific direction but instead as a random disturbance to the system. In our model, noises oscillate with positive and negative signs and are supposed to be a neutral force in the sense that they overall cancel out each other's effect with a zero mean. We additionally assume a specified autocorrelation function to the noise. That is
+    \begin{align*}
+        R_{\xi}(t, t') = \langle \xi(t)\xi(t') \rangle = \Gamma \delta (t-t')
+        \tag*{\small(3.2)}
+    \end{align*}
+    where $\Gamma = 2\gamma k_{B}T$ with $k_{B}T$ being the thermal energy. Such a setting builds a connection between the noise and the thermal energy; it reflects the physical phenomenon that particles move more vigorously and, hence, more irregularly compared to a still particle when the thermal energy increases. For example, the inks dropped into the water will spread faster under a higher temperature. In contrast, when we have an absolute zero temperature, i.e., $-273.15 ^\circ C$, every particle remains static, and no noise is involved. \newline
+    \newline
+    Some properties of the modeled noise, hence, can be derived under our assumptions. We introduce a new notation $\zeta_{i} = \int_{(i-1)h}^{ih} \! \xi (t) \, \mathrm{d}t$, where $\zeta_{i}$ is defined on the $i$th interval. $\xi_{i}$ is an independent random noise by our assumption. $\zeta_{i}$ is an integration of a large number of $\xi_{i}$ and each $\xi_{i}$ made a minuscule contribution to its integration. We, hence, argue that $\zeta_{i}$ follows a normal distribution by Central Limit Theorem. The normal distribution's density function requires parameters mean $\mu$ and variance $\sigma ^2$. Since $\zeta_{i}$ is an integration of $\xi_{i}$, we take advantage of noise $\xi_{i}$'s mean and specified autocorrelation function to study the ones of $\zeta_{i}$.
+    \begin{itemize}
+        \item Since $\langle \xi_{i} \rangle = 0$, $\langle \zeta_{i} \rangle = \int_{(i-1)h}^{ih} \! \langle \xi (t) \rangle \, \mathrm{d}t$ due to the linearity of the expectation. 
+        \item We study the variance of $\zeta_{i}$ by considering a more general case, $\zeta_{i}$'s covariance. The derivations in Appendix C gives, $\langle \zeta_{i} \zeta_{j} \rangle = 0$ if $i \neq j$; $= \Gamma h$ otherwise.
+    \end{itemize}
+    Therefore, $\zeta \sim \mathcal{N} (0, \Gamma h)$.
+    \end{flushleft}
+ 
+\begin{flushleft}
+    The particle now moves consistently due to the introduction of noise. To investigate the contribution of the spring's elastic force to the system, we will separate our discussion into two cases. In case II. 1, we will first remove the spring from the model by setting $K = 0$ in the governing equation (3.1). That is, we consider a system without elastic force. Later, in case II. 2, we will add back the component involving $K$. That is, we resume the system with elastic force. By comparing these two contrasting systems, with and without the elastic force, we hope to understand the influence of the elastic force on the system. Specifically, we want to know how the elastic force will affect the particle's trajectory $x(t)$ throughout the time $t$. \newline
+    \newline
+     \textbf{II. 1 The System without the Elastic Force}\\
+     Under the wise of Physics, our intuition is that the elastic force confines the range of the particle's trajectory $x(t)$. Without the spring's constraint, the particle will made a random motion instead. Recall that our system becomes simpler due to the absence of the elastic force. The governing equation, hence, becomes $\gamma \dot{x} = \xi$; a simpler system but involves $\xi$ for us to study the particle's trajectory driven by noise. The mean squared displacement (MSD) is a typical measure of the random walk's spatial extent. We will, thus, take $x(0)$, the particle's initial position as the reference point and study the deviation of the particle's position from its initial point over time using MSD. If the deviation grows with the time, a diffusive trend can be concluded. Such a conclusion will support our expectation towards the spring's functionality with more side evidence. Eventually, by contrasting the result we obtained here with the one of II. 2, we can show that the elastic force or metaphorically, the spring, indeed, having a fixation on the particle's position.
+     \newline
+     \newline
+     To achieve our goal, we need first to find the expression of the particle's trajectory. The derivation is similar to the one presented in Appendix D, except $K = 0$ as we haven't introduced the elastic force yet. We obtained, $\Delta x_{i} = x_{i} - x_{i-1} = \zeta_{i}$. Since we have already acquired some properties of the noise, we hope that we can use the noise as a bridge to establish the relationship between the  trajectory $x$'s MSD and the time t. Eventually, using this trick, our derivation in the Appendix E shows $\langle (x(t) -x(0))^{2} \rangle = 2Dt$, where $D = k_{B}T/\gamma$. This verifies our initial conjecture about a diffusive trend of the particle's trajectory. Taking the real life example of dropping the ink into the pond again, we can observe the contaminated ripple's radius, reflected by Root Mean Squared (RMS) Displacement, i.e. $\sqrt{MSD} $ increases proportional to the $\sqrt{t}$. Or equivalently, the area of the contaminated ripple, exhibits by MSD expands pro rata with time $t$.
+     \newline
+     \newline
+    \textbf{II. 1 The System with the Elastic Force}\\
+    Bringing back the elastic force, we resume the discussion of $\gamma \dot{x} = - Kx + \xi$ (3.1). The negative correlation between the $\dot{x}$ and $x$ suggests the spring will pull back the the particle if the particle moves too far away from its equilibrium state. In a world without the noise $\xi$, such an equilibrium state is easy to be found as $x(t) = 0$ is an obvious solution of (3.1). When the particle returns to position 0, both damped force and elastic force, signified by $\gamma \dot{x}$ and $-Kx$ respectively dismissed with magnitude equaling 0. However, recall that we have already abandoned such as noise-less world having a still particle with zero variance at the equilibrium state. We now shift our interest to study the \textit{distribution} of this particle’s stochastic trajectory under its equilibrium state. Since the position $x(t) = 0$ is an equilibrium position in the world without the noise, it is a natural question for us to ask if $x(t) = 0$ remains to be a critical position in a noise-filled universe. We answered this question by numerically generating $x(t)$ governed by the iterative equation. 
+    \begin{align*}
+        x_{i} & = x_{i-1} -\frac{K}{\gamma}x_{i-1}h + \frac{\zeta_{i}}{r}
+    \end{align*}
+    Such an iterative equation can be obtained by applying the Forward Euler Method and generating $\zeta \sim \mathcal{N} (0, \Gamma h)$. The derivation details is shown in Appendix D. Indeed, we found the best fit normal distribution of numerically generated by $x(t)$ has the mean very close to 0. That confirms our speculation. The particle attempts to returns to its initial position 0, i.e. the equilibrium state without the noise under the spring's constraint. However, due to the constant kicks by noise, the particle cannot fully stop but oscillate around the $x(t) = 0$ and such oscillation contributes to the distribution's variance. We, hence, conclude that the particle will reach an \textit{equilibrium distribution} limited by the spring's elastic force.
+\end{flushleft}
+
+
+
+
+
+
+    \begin{figure}[!htb]
+    \section*{III: Figures}
+      \centering
+      \def\svgscale{0.6}
+      \includesvg{3_Cases}
+      \caption{Comparison between the Numerical and Analytical Results}
+      \medskip
+      \small
+      A $:=$ analytical result, N $:=$ numerical result; lines and markers represent the analytical and the numerical values respectively; for the demonstration purpose, numerical values were drawn every 1 unit of time \\
+      the length of the interval: $ t = 10$, time step: $h = 0.001$, initial position: $X(0) = 0$, initial velocity: $p(0) = 1$, \\
+      The orange line and blue squares corresponds to mass: $m = 1$, spring constant, $K = 2$, frictional coefficient $\gamma = 10$ (Overdamped)\\
+      The green line and red dots corresponds to mass: $m = 1$, spring constant, $K = 1$, frictional coefficient $\gamma = 2$ (Marginal: Repeated Roots)\\
+      The purple line and green diamonds correspond to mass: $m = 10$, spring constant, $K = 20$, frictional coefficient $\gamma = 1$ (Underdamped)\\ The good fit between the analytical and numerical results was shown.
+    \end{figure}
+
+    \begin{figure}[htbp]
+      \centering
+      \def\svgscale{0.6}
+      \includesvg{Noise}
+      \caption{Noise $\sim$ $\mathcal{N}(0, 0.1^{2})$}
+
+      \centering
+      \def\svgscale{0.6}
+      \includesvg{Trajectories}
+      \caption{Trajectories of $X(t)$ Generated from $x_{i} = x_{i-1} + \frac{\zeta_{i}}{r}$}
+      \medskip
+      \small
+      10 Trajectories were drawn for the demonstration purpose. The diffusive trend of each individual trajectory diverging from the mean 0 is very clear.
+
+      \centering
+      \def\svgscale{0.6}
+      \includesvg{Variance}
+      \caption{Variance of the Trajectories}
+      \medskip
+      \small
+      Variance is calculated every $h = 0.001$. The total number of observed points is, hence, $N = t/h = 10/0.001 = 10,000$. The theoretical line is variance  $\langle (x(t)-x(0))^{2} \rangle = 2Dt$, where $2D = 2k_{B}T/ \gamma = 2*0.5/10$. The best fitted single regression line has the slope $b = 0.0986$ and the intercept $a = -0.0111$
+      \end{figure}
+
+      \begin{figure}
+      \centering
+      \def\svgscale{0.6}
+      \includesvg{Bestfit}
+      \caption{Estimated Distribution of X(t) with Noise Generated \\
+      from the Iterative Equation $x_{i} = x_{i-1} -\frac{K}{r}x_{i-1}h + \frac{\zeta_{i}}{\gamma}$}
+      \medskip
+      \small
+      where $x_0 = 0$, $h = 0.001$, $K = 5$, $\gamma = 10$, $\zeta_{i} \sim \mathcal{N}(0, 0.1^{2})$.
+      The best fit normal distribution has the estimated parameters $\mu = 0.0029$, $\sigma^{2} = 0.3124^{2}$. The theoretical distribution $X(t) \sim \mathcal{N}(0, k_{BT}/k = 0.5/5 = {\sqrt{0.1}}^{2}))$
+
+      \centering
+      \def\svgscale{0.6}
+      \includesvg{MC_Bestfit}
+      \caption{Estimated Distribution of X(t) with Noise Generated from the MC Simulation}
+      \medskip
+      \small
+      The best fit normal distribution has the estimated parameters $\mu = -0.0006$, $\sigma^{2} = 0.3143^{2}$.
+      The theoretical distribution $X(t) \sim \mathcal{N}(0, k_{BT}/k = 0.5/5 = {\sqrt{0.1}}^{2}))$
+
+    \begin{flushleft}
+    \section*{Appendix}
+    \url{https://github.com/hyhoAlex/Math_Capstone_Project_Public}
+    \end{flushleft}
+    \begin{flushleft}
+    \textbf{Codes:} \url{https://github.com/hyhoAlex/Math_Capstone_Project_Public}
+    \section*{Acknowledgement}
+    In this project, I have extensively used the materials and ideas provided by Prof. Qian Tiezheng. I deeply thank him for his supervision. All errors are mine.
+    \end{flushleft}
+    \end{figure}
+
+\end{document}
